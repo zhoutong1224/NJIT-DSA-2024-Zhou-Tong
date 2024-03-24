@@ -2,72 +2,64 @@ package oy.tol.tra;
 
 public class KeyValueBSearchTree<K extends Comparable<K>, V> implements Dictionary<K, V> {
 
-    // This is the BST implementation, KeyValueHashTable has the hash table
-    // implementation
-
     private TreeNode<K, V> root;
     private int count = 0;
     private int maxTreeDepth = 0;
 
     @Override
     public Type getType() {
-        return Type.NONE;
+        return Type.BST;
     }
 
     @Override
     public int size() {
-        // TODO: Implement this
-        return 0;
+        return count;
     }
 
-    /**
-     * Prints out the statistics of the tree structure usage.
-     * Here you should print out member variable information which tell something
-     * about
-     * your implementation.
-     * <p>
-     * For example, if you implement this using a hash table, update member
-     * variables of the class
-     * (int counters) in add(K) whenever a collision happen. Then print this counter
-     * value here.
-     * You will then see if you have too many collisions. It will tell you that your
-     * hash function
-     * is good or bad (too much collisions against data size).
-     */
     @Override
     public String getStatus() {
-        String toReturn = "Tree has max depth of " + maxTreeDepth + ".\n";
-        toReturn += "Longest collision chain in a tree node is " + TreeNode.longestCollisionChain + "\n";
+        StringBuilder builder = new StringBuilder();
+        builder.append("Tree has max depth of ").append(maxTreeDepth).append(".\n");
+        builder.append("Longest collision chain in a tree node is ").append(TreeNode.longestCollisionChain).append("\n");
         TreeAnalyzerVisitor<K, V> visitor = new TreeAnalyzerVisitor<>();
         root.accept(visitor);
-        toReturn += "Min path height to bottom: " + visitor.minHeight + "\n";
-        toReturn += "Max path height to bottom: " + visitor.maxHeight + "\n";
-        toReturn += "Ideal height if balanced: " + Math.ceil(Math.log(count)) + "\n";
-        return toReturn;
+        builder.append("Min path height to bottom: ").append(visitor.minHeight).append("\n");
+        builder.append("Max path height to bottom: ").append(visitor.maxHeight).append("\n");
+        builder.append("Ideal height if balanced: ").append(Math.ceil(Math.log(count))).append("\n");
+        return builder.toString();
     }
 
     @Override
     public boolean add(K key, V value) throws IllegalArgumentException, OutOfMemoryError {
-        // TODO: Implement this
-        // Remember null check.
-        // If root is null, should go there.
-        
-            // update the root node. But it may have children
-            // so do not just replace it with this new node but set
-            // the keys and values for the already existing root.
-            
-        return false;
+        if (key == null || value == null) {
+            throw new IllegalArgumentException("The key or value should not be null!");
+        }
+        if (root == null) {
+            root = new TreeNode<>(key, value);
+            count++;
+            return true;
+        } else {
+            int addPoint = root.insert(key, value, key.hashCode());
+            if (addPoint > 0) {
+                count++;
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     @Override
     public V find(K key) throws IllegalArgumentException {
-        // TODO: Implement this. //Think about this
-        return (null);
+        if (key == null) {
+            throw new IllegalArgumentException("The key could not be null!");
+        }
+        return root.find(key, key.hashCode());
     }
 
     @Override
     public void ensureCapacity(int size) throws OutOfMemoryError {
-        // Nothing to do here. Trees need no capacity.
+        // 无需实现，树结构不需要容量调整
     }
 
     @Override
@@ -81,8 +73,6 @@ public class KeyValueBSearchTree<K extends Comparable<K>, V> implements Dictiona
 
     @Override
     public void compress() throws OutOfMemoryError {
-        // Nothing to do here, since BST does not use extra space like array based
-        // structures.
+        // 无需实现，因为BST不像基于数组的结构那样使用额外的空间
     }
-
 }

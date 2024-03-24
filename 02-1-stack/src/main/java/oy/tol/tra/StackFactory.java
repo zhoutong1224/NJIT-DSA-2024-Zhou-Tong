@@ -30,4 +30,12 @@ public class StackFactory {
    public static StackInterface<Integer> createIntegerStack(int capacity) {
       return new StackImplementation<>(capacity);
    }
+   
+   /**
+    * Creates an instance of StackImplementation for Character type.
+    * @return The stack object.
+    */
+   public static StackInterface<Character> createCharacterStack() {
+      return new StackImplementation<>();
+   }
 }
