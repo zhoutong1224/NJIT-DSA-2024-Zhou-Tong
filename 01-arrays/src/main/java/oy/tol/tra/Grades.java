@@ -1,61 +1,59 @@
 package oy.tol.tra;
 
-import java.util.Comparator;
-
 /**
  * A simple array of student grades to be used in testing
  * misbehaving algorithm for reversing the array.
  */
-public class Grades<T> {
-   
-   private T[] grades = null;
+public class Grades {
 
-   /**
-    * A constructor for building Arrays.
-    * @param grades the plain Java array with elements to add.
-    */
-   public Grades(T[] grades) {
-      this.grades = (T[]) new Object[grades.length];
-      System.arraycopy(grades, 0, this.grades, 0, grades.length);
-   }
+    private Integer[] grades = null;
 
-   /**
-    * The method to reverse the internal array.
-    */
-   public void reverse() {
-      Algorithms.reverseArray(grades);
-   }
+    /**
+     * A constructor for building IntArrays.
+     *
+     * @param grades the plain Java integer array with numbers to add.
+     */
+    public Grades(Integer[] grades) {
+        this.grades = new Integer[grades.length];
+        System.arraycopy(grades, 0, this.grades, 0, grades.length);
+    }
 
-   /**
-    * Sorts the array based on a custom comparator.
-    * @param comparator the comparator to determine the order of elements.
-    */
-   public void sort(Comparator<? super T> comparator) {
-      Algorithms.sortArrayWithComparator(grades, comparator);
-   }
+    /**
+     * The method to reverse the internal Java int array.
+     */
+    public void reverse() {
+        /* TODO:
+         1. Edit the test data files to see if the reverse() really works or not.
+         2. Execute the IntArrayTests to see that some of them fail.
+         3. Study the code below and try to find what is the issue.
+         4. Use the debugger to see the execution and variable values if necessary.
+         5. Fix the issue.
+         6. Transform the algorithm to <strong>use</strong> the generic one from Algorithms.java, as instructed in the readme file.
+        */
+        Algorithms.reverse(grades);
+    }
 
-   /**
-    * Calculates the average value of elements in the array.
-    * @return the average value of elements in the array.
-    */
-   public double calculateAverage() {
-      if (grades == null || grades.length == 0) {
-         return 0.0;
-      }
+    /**
+     * Sorts the array to ascending order.
+     */
+    public void sort() {
+        /* TODO:
+         1. Edit the test data files to see if the sort() really works or not.
+         2. Execute the IntArrayTests to see that some of them fail.
+         3. Study the code below and try to find what is the issue.
+         4. Use the debugger to see the execution and variable values if necessary.
+         5. Fix the issue.
+         6. Transform the algorithm to <strong>use</strong> the generic one from Algorithms.java as instructed in the readme file.
+        */
+        Algorithms.sort(grades);
+    }
 
-      double sum = 0;
-      for (T grade : grades) {
-         sum += Double.parseDouble(grade.toString());
-      }
-
-      return sum / grades.length;
-   }
-
-   /**
-    * Returns the plain Java array for investigation.
-    * @return The array.
-    */
-   public T[] getArray() {
-      return grades;
-   }
+    /**
+     * Returns the plain Java int [] array for investigation.
+     *
+     * @return The int array.
+     */
+    public Integer[] getArray() {
+        return grades;
+    }
 }
