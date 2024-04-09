@@ -1,5 +1,3 @@
-package oy.tol.tra;
-
 public class KeyValueBSearchTree<K extends Comparable<K>, V> implements Dictionary<K, V> {
 
     private TreeNode<K, V> root;
@@ -18,15 +16,14 @@ public class KeyValueBSearchTree<K extends Comparable<K>, V> implements Dictiona
 
     @Override
     public String getStatus() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Tree has max depth of ").append(maxTreeDepth).append(".\n");
-        builder.append("Longest collision chain in a tree node is ").append(TreeNode.longestCollisionChain).append("\n");
+        String status = "Tree has max depth of " + maxTreeDepth + ".\n";
+        status += "Longest collision chain in a tree node is " + TreeNode.longestCollisionChain + "\n";
         TreeAnalyzerVisitor<K, V> visitor = new TreeAnalyzerVisitor<>();
         root.accept(visitor);
-        builder.append("Min path height to bottom: ").append(visitor.minHeight).append("\n");
-        builder.append("Max path height to bottom: ").append(visitor.maxHeight).append("\n");
-        builder.append("Ideal height if balanced: ").append(Math.ceil(Math.log(count))).append("\n");
-        return builder.toString();
+        status += "Min path height to bottom: " + visitor.minHeight + "\n";
+        status += "Max path height to bottom: " + visitor.maxHeight + "\n";
+        status += "Ideal height if balanced: " + Math.ceil(Math.log(count)) + "\n";
+        return status;
     }
 
     @Override
@@ -38,14 +35,13 @@ public class KeyValueBSearchTree<K extends Comparable<K>, V> implements Dictiona
             root = new TreeNode<>(key, value);
             count++;
             return true;
+        }
+        int addPoint = root.insert(key, value, key.hashCode());
+        if (addPoint > 0) {
+            count++;
+            return true;
         } else {
-            int addPoint = root.insert(key, value, key.hashCode());
-            if (addPoint > 0) {
-                count++;
-                return true;
-            } else {
-                return false;
-            }
+            return false;
         }
     }
 
@@ -54,18 +50,20 @@ public class KeyValueBSearchTree<K extends Comparable<K>, V> implements Dictiona
         if (key == null) {
             throw new IllegalArgumentException("The key could not be null!");
         }
-        return root.find(key, key.hashCode());
+        return root != null ? root.find(key, key.hashCode()) : null;
     }
 
     @Override
     public void ensureCapacity(int size) throws OutOfMemoryError {
-        // 无需实现，树结构不需要容量调整
+        // Nothing to do here. Trees need no capacity.
     }
 
     @Override
     public Pair<K, V>[] toSortedArray() {
         TreeToArrayVisitor<K, V> visitor = new TreeToArrayVisitor<>(count);
-        root.accept(visitor);
+        if (root != null) {
+            root.accept(visitor);
+        }
         Pair<K, V>[] sorted = visitor.getArray();
         Algorithms.fastSort(sorted);
         return sorted;
@@ -73,6 +71,6 @@ public class KeyValueBSearchTree<K extends Comparable<K>, V> implements Dictiona
 
     @Override
     public void compress() throws OutOfMemoryError {
-        // 无需实现，因为BST不像基于数组的结构那样使用额外的空间
+        // Nothing to do here, since BST does not use extra space like array based structures.
     }
 }

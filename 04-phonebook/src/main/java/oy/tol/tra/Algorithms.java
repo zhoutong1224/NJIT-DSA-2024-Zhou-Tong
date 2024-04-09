@@ -6,19 +6,27 @@ public class AdvancedAlgorithms {
 
     public static <T extends Comparable<T>> void mergeSort(T[] array) {
         if (array != null && array.length > 1) {
-            int mid = array.length / 2;
-            T[] leftArray = Arrays.copyOfRange(array, 0, mid);
-            T[] rightArray = Arrays.copyOfRange(array, mid, array.length);
-            mergeSort(leftArray);
-            mergeSort(rightArray);
-            merge(array, leftArray, rightArray);
+            T[] tempArray = Arrays.copyOf(array, array.length);
+            mergeSort(array, tempArray, 0, array.length - 1);
         }
     }
 
-    private static <T extends Comparable<T>> void merge(T[] array, T[] leftArray, T[] rightArray) {
-        int leftLength = leftArray.length;
-        int rightLength = rightArray.length;
-        int i = 0, j = 0, k = 0;
+    private static <T extends Comparable<T>> void mergeSort(T[] array, T[] tempArray, int start, int end) {
+        if (start < end) {
+            int mid = (start + end) / 2;
+            mergeSort(array, tempArray, start, mid);
+            mergeSort(array, tempArray, mid + 1, end);
+            merge(array, tempArray, start, mid, end);
+        }
+    }
+
+    private static <T extends Comparable<T>> void merge(T[] array, T[] tempArray, int start, int mid, int end) {
+        int leftLength = mid - start + 1;
+        int rightLength = end - mid;
+        T[] leftArray = Arrays.copyOfRange(array, start, mid + 1);
+        T[] rightArray = Arrays.copyOfRange(array, mid + 1, end + 1);
+
+        int i = 0, j = 0, k = start;
         while (i < leftLength && j < rightLength) {
             if (leftArray[i].compareTo(rightArray[j]) <= 0) {
                 array[k++] = leftArray[i++];
@@ -53,9 +61,5 @@ public class AdvancedAlgorithms {
                 System.out.println(item);
             }
         }
-    }
-
-    public static <T> void customSort(T[] array, Comparator<? super T> comparator) {
-        Arrays.sort(array, comparator);
     }
 }
