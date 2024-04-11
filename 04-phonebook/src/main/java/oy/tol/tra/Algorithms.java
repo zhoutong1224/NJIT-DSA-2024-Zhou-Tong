@@ -1,65 +1,110 @@
+package oy.tol.tra;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
-public class AdvancedAlgorithms {
-
-    public static <T extends Comparable<T>> void mergeSort(T[] array) {
-        if (array != null && array.length > 1) {
-            T[] tempArray = Arrays.copyOf(array, array.length);
-            mergeSort(array, tempArray, 0, array.length - 1);
+public class Algorithms {
+    
+    public static <T extends Comparable<T>> void sort(T [] array) {
+        if (array != null && array.length != 0) {
+            int n = array.length;
+            for (int i = 0; i < n-1; i++) {
+                for (int j = 0; j < n-i-1; j++) {
+                    if (array[j].compareTo(array[j+1]) > 0) {
+                        T tmp = array[j];
+                        array[j] = array[j+1];
+                        array[j+1] = tmp;
+                    }
+                }
+            }
         }
     }
 
-    private static <T extends Comparable<T>> void mergeSort(T[] array, T[] tempArray, int start, int end) {
-        if (start < end) {
-            int mid = (start + end) / 2;
-            mergeSort(array, tempArray, start, mid);
-            mergeSort(array, tempArray, mid + 1, end);
-            merge(array, tempArray, start, mid, end);
+    public static <T> void reverse(T [] array) {
+        if (array != null && array.length != 0) {
+            int n = array.length;
+            for (int i = 0; i < n/2; i++) {
+                T temp = array[i];
+                array[i] = array[n-i-1];
+                array[n-i-1] = temp;
+            }
         }
     }
 
-    private static <T extends Comparable<T>> void merge(T[] array, T[] tempArray, int start, int mid, int end) {
-        int leftLength = mid - start + 1;
-        int rightLength = end - mid;
-        T[] leftArray = Arrays.copyOfRange(array, start, mid + 1);
-        T[] rightArray = Arrays.copyOfRange(array, mid + 1, end + 1);
-
-        int i = 0, j = 0, k = start;
-        while (i < leftLength && j < rightLength) {
-            if (leftArray[i].compareTo(rightArray[j]) <= 0) {
-                array[k++] = leftArray[i++];
+    public static <T extends Comparable<T>> int binarySearch(T aValue, T [] fromArray, int fromIndex, int toIndex) {
+        while (fromIndex <= toIndex) {
+            int middle = fromIndex + (toIndex - fromIndex) / 2;
+            if (aValue.compareTo(fromArray[middle]) > 0) {
+                fromIndex = middle + 1;
+            } else if (aValue.compareTo(fromArray[middle]) < 0) {
+                toIndex = middle - 1;
             } else {
-                array[k++] = rightArray[j++];
+                return middle;
             }
         }
-        while (i < leftLength) {
-            array[k++] = leftArray[i++];
-        }
-        while (j < rightLength) {
-            array[k++] = rightArray[j++];
-        }
+        return -1;
     }
 
-    public static <T extends Comparable<T>> T findMax(T[] array) {
-        if (array == null || array.length == 0) {
-            return null;
-        }
-        T max = array[0];
-        for (int i = 1; i < array.length; i++) {
-            if (array[i].compareTo(max) > 0) {
-                max = array[i];
-            }
-        }
-        return max;
+    public static <T> void swap(T[] array, int index1, int index2) {
+        T tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
     }
 
-    public static <T> void filterAndPrint(T[] array, Predicate<T> predicate) {
-        for (T item : array) {
-            if (predicate.test(item)) {
-                System.out.println(item);
+    private static <E extends Comparable<E>> int partition(E [] array, int begin, int end) {
+        E benchmark = array[begin];
+        int left = begin;
+        int right = end;
+        while (left < right) {
+            while (left < right && array[right].compareTo(benchmark) > 0) {
+                right--;
+            }
+            while (left < right && array[left].compareTo(benchmark) <= 0) {
+                left++;
+            }
+            if (left < right) {
+                swap(array, left, right);
             }
         }
+        array[begin] = array[left];
+        array[left] = benchmark;
+        return left;
+    }
+
+    public static <E extends Comparable<E>> void quickSort(E [] array, int begin, int end) {
+        if (begin >= end) {
+            return;
+        }
+        int pivot = partition(array, begin, end);
+        quickSort(array, begin, pivot - 1);
+        quickSort(array, pivot + 1, end);
+    }
+
+    public static <E extends Comparable<E>> void fastSort(E [] array) {
+        quickSort(array, 0, array.length - 1);
+    }
+
+    public static <T> int partitionByRule(T [] pairs, int count, Predicate<T> judgeNullPredicate) {
+        int left = 0;
+        int right = count - 1;
+        while (left <= right) {
+            while (left <= right && !judgeNullPredicate.test(pairs[left])) {
+                left++;
+            }
+            while (left <= right && judgeNullPredicate.test(pairs[right])) {
+                right--;
+            }
+            if (left < right) {
+                swap(pairs, left, right);
+                left++;
+                right--;
+            }
+        }
+        return left;
+    }
+
+    public static <T> void sortWithComparator(T[] array, Comparator<? super T> comparator) {
+        Arrays.sort(array, comparator);
     }
 }
