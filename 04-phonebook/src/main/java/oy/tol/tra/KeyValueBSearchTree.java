@@ -1,3 +1,5 @@
+package oy.tol.tra;
+
 public class KeyValueBSearchTree<K extends Comparable<K>, V> implements Dictionary<K, V> {
 
     private TreeNode<K, V> root;
@@ -16,14 +18,14 @@ public class KeyValueBSearchTree<K extends Comparable<K>, V> implements Dictiona
 
     @Override
     public String getStatus() {
-        String status = "Tree has max depth of " + maxTreeDepth + ".\n";
-        status += "Longest collision chain in a tree node is " + TreeNode.longestCollisionChain + "\n";
+        String toReturn = "Tree has max depth of " + maxTreeDepth + ".\n";
+        toReturn += "Longest collision chain in a tree node is " + TreeNode.longestCollisionChain + "\n";
         TreeAnalyzerVisitor<K, V> visitor = new TreeAnalyzerVisitor<>();
         root.accept(visitor);
-        status += "Min path height to bottom: " + visitor.minHeight + "\n";
-        status += "Max path height to bottom: " + visitor.maxHeight + "\n";
-        status += "Ideal height if balanced: " + Math.ceil(Math.log(count)) + "\n";
-        return status;
+        toReturn += "Min path height to bottom: " + visitor.minHeight + "\n";
+        toReturn += "Max path height to bottom: " + visitor.maxHeight + "\n";
+        toReturn += "Ideal height if balanced: " + Math.ceil(Math.log(count)) + "\n";
+        return toReturn;
     }
 
     @Override
@@ -36,8 +38,8 @@ public class KeyValueBSearchTree<K extends Comparable<K>, V> implements Dictiona
             count++;
             return true;
         }
-        int addPoint = root.insert(key, value, key.hashCode());
-        if (addPoint > 0) {
+        int added = root.insert(key, value, key.hashCode());
+        if (added > 0) {
             count++;
             return true;
         } else {
@@ -50,7 +52,10 @@ public class KeyValueBSearchTree<K extends Comparable<K>, V> implements Dictiona
         if (key == null) {
             throw new IllegalArgumentException("The key could not be null!");
         }
-        return root != null ? root.find(key, key.hashCode()) : null;
+        if (root == null) {
+            return null;
+        }
+        return root.find(key, key.hashCode());
     }
 
     @Override
